@@ -109,6 +109,7 @@ Resources:
           # Print out timestamp
           cd /home/ec2-user/
           whoami > timestamps.txt
+          echo "Start installing software." >> timestamps.txt
           date >> timestamps.txt
           # install and start Apache
           yum update -y
@@ -117,18 +118,18 @@ Resources:
           echo "<html><h1>Hello World from ${InstanceType}.</h1></html>" > index.html
           service httpd start
           chkconfig httpd on
-          echo "Started Apache Web server (httpd)." >> timestamps.txt
           # Print out timestamp
           cd /home/ec2-user/
+          echo "Started Apache Web server (httpd)." >> timestamps.txt
           date >> timestamps.txt
           # install CloudWatch monitoring scripts
           yum install -y perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protocol-https perl-Digest-SHA.x86_64
           curl https://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip -O
           unzip CloudWatchMonitoringScripts-1.2.2.zip
           rm -rf CloudWatchMonitoringScripts-1.2.2.zip
-          echo "Downloaded CloudWatch monitoring scripts." >> timestamps.txt
           # Print out timestamp
           cd /home/ec2-user/
+          echo "Downloaded CloudWatch monitoring scripts." >> timestamps.txt
           date >> timestamps.txt
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
@@ -183,6 +184,6 @@ Outputs:
       'Fn::GetAtt':
         - EC2Instance
         - PublicIp
-  SSMSessionManagerUrl:
-    Description: SSM Session Manager Url for the newly created EC2 instance
-    Value: !Sub 'https://console.aws.amazon.com/systems-manager/session-manager/${EC2Instance}?region=${AWS::Region}'
+  EC2InstanceConnectUrl:
+    Description: EC2 Instance Connect Url for the newly created EC2 instance
+    Value: !Sub 'https://console.aws.amazon.com/ec2/v2/connect/ec2-user/${EC2Instance}?region=${AWS::Region}'
