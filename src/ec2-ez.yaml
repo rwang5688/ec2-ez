@@ -184,6 +184,6 @@ Outputs:
       'Fn::GetAtt':
         - EC2Instance
         - PublicIp
-  SSMSessionManagerUrl:
-    Description: SSM Session Manager Url for the newly created EC2 instance
-    Value: !Sub 'https://console.aws.amazon.com/systems-manager/session-manager/${EC2Instance}?region=${AWS::Region}'
+  EC2InstanceConnectUrl:
+    Description: EC2 Instance Connect Url for the newly created EC2 instance
+    Value: !Sub 'https://console.aws.amazon.com/ec2/v2/connect/ec2-user/${EC2Instance}?region=${AWS::Region}'
