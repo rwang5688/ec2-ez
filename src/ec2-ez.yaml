@@ -148,18 +148,6 @@ Resources:
           ToPort: 443
           CidrIpv6: ::/0
           Description: 'HTTPS IPv6'
-  InstanceSecurityGroupIngressCatchAll:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    DependsOn: InstanceSecurityGroup
-    Properties:
-      Description: Catch All from Instance Security Group
-      FromPort: -1
-      GroupId:
-        Ref: InstanceSecurityGroup
-      IpProtocol: -1
-      SourceSecurityGroupId:
-        Ref: InstanceSecurityGroup
-      ToPort: -1
 Outputs:
   AZ:
     Description: Availability Zone of the newly created EC2 instance
