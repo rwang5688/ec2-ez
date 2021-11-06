@@ -95,9 +95,9 @@ Resources:
           #!/bin/bash
           # Print out timestamp
           cd /home/ec2-user/
-          whoami > timestamps.txt
-          echo "Start installing software." >> timestamps.txt
-          date >> timestamps.txt
+          whoami > logs.txt
+          date >> logs.txt
+          echo "Start installing software on ${InstanceType}." >> logs.txt
           # install and start Apache
           yum update -y
           yum install -y httpd
@@ -107,8 +107,8 @@ Resources:
           chkconfig httpd on
           # Print out timestamp
           cd /home/ec2-user/
-          echo "Started Apache Web server (httpd)." >> timestamps.txt
-          date >> timestamps.txt
+          date >> logs.txt
+          echo "Started Apache Web server (httpd)." >> logs.txt
           # install CloudWatch monitoring scripts
           yum install -y perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protocol-https perl-Digest-SHA.x86_64
           curl https://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip -O
@@ -116,8 +116,8 @@ Resources:
           rm -rf CloudWatchMonitoringScripts-1.2.2.zip
           # Print out timestamp
           cd /home/ec2-user/
-          echo "Downloaded CloudWatch monitoring scripts." >> timestamps.txt
-          date >> timestamps.txt
+          date >> logs.txt
+          echo "Downloaded CloudWatch monitoring scripts." >> logs.txt
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
