@@ -1,0 +1,3 @@
+# project specific files
+ec2-ez-*-parameters.json
+*.pem 

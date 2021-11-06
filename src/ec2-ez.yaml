@@ -7,10 +7,11 @@ Description: >-
   creates an Amazon EC2 instance. You will be billed for the AWS resources used
   if you create a stack from this template.
 Parameters:
-  KeyName:
-    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
-    Type: 'AWS::EC2::KeyPair::KeyName'
-    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  AmiId:
+    Description: AMI Id of the latest Amazon Linux image in the launching region
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    ConstraintDescription: AMI Id of the latest Amazon Linux image in the launching region
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
   InstanceType:
     Description: WebServer EC2 instance type
     Type: String
@@ -30,19 +31,6 @@ Parameters:
       - t3.large
       - t3.xlarge
       - t3.2xlarge
-      - m4.large
-      - m4.xlarge
-      - m4.2xlarge
-      - m4.4xlarge
-      - m4.10xlarge
-      - m4.16xlarge
-      - m5.large
-      - m5.xlarge
-      - m5.2xlarge
-      - m5.4xlarge
-      - m5.8xlarge
-      - m5.12xlarge
-      - m5.16xlarge
       - g4dn.xlarge
       - g4dn.2xlarge
       - g4dn.4xlarge
@@ -56,6 +44,10 @@ Parameters:
       - p3dn.24xlarge
       - p4d.24xlarge
     ConstraintDescription: must be a valid EC2 instance type.
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
   SSHLocation:
     Description: The IP address range that can be used to SSH to the EC2 instances
     Type: String
@@ -64,11 +56,6 @@ Parameters:
     Default: 0.0.0.0/0
     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
-  AmiId:
-    Description: AMI Id of the latest Amazon Linux image in the launching region
-    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-    ConstraintDescription: AMI Id of the latest Amazon Linux image in the launching region
-    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 Resources:
   EC2InstanceRole:
     Type: AWS::IAM::Role
@@ -93,16 +80,16 @@ Resources:
   EC2Instance:
     Type: 'AWS::EC2::Instance'
     Properties:
-      InstanceType:
-        Ref: InstanceType
-      SecurityGroups:
-        - Ref: InstanceSecurityGroup
-      KeyName:
-        Ref: KeyName
-      ImageId:
-        Ref: AmiId
       IamInstanceProfile:
         Ref: EC2InstanceProfile
+      ImageId:
+        Ref: AmiId
+      InstanceType:
+        Ref: InstanceType
+      KeyName:
+        Ref: KeyName
+      SecurityGroups:
+        - Ref: InstanceSecurityGroup
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -137,8 +124,8 @@ Resources:
       GroupDescription: Enable SSH access via port 22
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
+          FromPort: 22
+          ToPort: 22
           CidrIp:
             Ref: SSHLocation
         - IpProtocol: tcp
@@ -162,16 +149,16 @@ Resources:
           CidrIpv6: ::/0
           Description: 'HTTPS IPv6'
 Outputs:
-  InstanceId:
-    Description: InstanceId of the newly created EC2 instance
-    Value:
-      Ref: EC2Instance
   AZ:
     Description: Availability Zone of the newly created EC2 instance
     Value:
       'Fn::GetAtt':
         - EC2Instance
         - AvailabilityZone
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value:
+      Ref: EC2Instance
   PublicDNS:
     Description: Public DNSName of the newly created EC2 instance
     Value:
