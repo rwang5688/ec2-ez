@@ -154,9 +154,11 @@ Resources:
     Properties:
       Description: Catch All from Instance Security Group
       FromPort: -1
-      GroupId: !Ref InstanceSecurityGroup
+      GroupId:
+        Ref: InstanceSecurityGroup
       IpProtocol: -1
-      SourceSecurityGroupId: !Ref InstanceSecurityGroup
+      SourceSecurityGroupId:
+        Ref: InstanceSecurityGroup
       ToPort: -1
 Outputs:
   AZ:
