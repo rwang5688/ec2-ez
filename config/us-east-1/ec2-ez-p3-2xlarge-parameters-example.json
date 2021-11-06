@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "p3.2xlarge"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "<ChangeMe>"
+  },
+  {
+    "ParameterKey": "SSHLocation",
+    "ParameterValue": "0.0.0.0/0"
+  }
+]
